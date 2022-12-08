@@ -221,4 +221,34 @@ def decodeCesarAff(alphabet,mot,a,b):
         result+=alphabet[y] #la i-ème lettre du mot en clair d'index x dans l'alphabet devient la i-ème lettre du mot crypté d'index y.
     return result
 \end{lstlisting}
+\section{Exemples sur jeux d'essais}
+\noindent
+Alphabets:
+\begin{itemize}
+\item Alphabet classique: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+\item Alphabet "complet": (cf. code source)
+\end{itemize}
+Mots:
+\begin{itemize}
+\item "OUI"
+\item "Si deux hommes ont la même opinion. L'un d'eux est de trop"
+\end{itemize}
+\subsection{Code Inverse}
+\begin{enumerate}
+\item "OUI" $\Rightarrow$ "IUO" $\Rightarrow$ "OUI"
+\item "Si deux hommes ont la même opinion. L'un d'eux est de trop" $\Rightarrow$ "port ed tse xue'd nu'L .noinipo emêm al tno semmoh xued iS"
+\end{enumerate}
+\subsection{Code César} 
+\begin{enumerate}
+\item clé 6: "OUI" $\Rightarrow$ "UAO"
+\item clé -9: "OUI" $\Rightarrow$ "FLZ"
+\item clé 3: "Si deux hommes ont la même opinion. L'un d'eux est de trop" $\Rightarrow$ "Vl"ghx\{ "krpphv"rqw"od"p \# ph"rslqlrq1"O*xq"g*hx \{ "hvw"gh"wurs"
+\end{enumerate}
+\subsection{Code César affine}
+\begin{enumerate}
+\item a=7, b=1: "OUI" $\Rightarrow$ "VLF"
+\item a=3, b=9: "OUI" $\Rightarrow$ "ZRH"
+\item a=15, b=-2: "OUI" $\Rightarrow$ "AMO"
+\item a=35, b=6: "Si deux hommes ont la même opinion. L'un d'eux est de trop" $\Rightarrow$ "=?APsclAéQkks\} AQ.@AHGAkdksAQt?.?Q.nAh9c.AP9sclAs \} @APsA@ZQt"
+\end{enumerate}
 \end{document}

@@ -14,14 +14,14 @@ def scan(lettre, alphabet):
                 exit()
     return y
 
-def codeCezar(alphabet,mot,cle):
+def codeCesar(alphabet,mot,cle):
     result=""
     for i in range(len(mot)): # 0 <= i <= len(mot)-1
         y=scan(mot[i],alphabet) # position de la i-ème lettre du mot dans l'alphabet ; copions la valeur de y à cette étape sous le nom x
         y=(y+cle)%len(alphabet) # décalage avec la clé cézar (y congru à x + cle modulo la taille de l'alphabet)
         result+=alphabet[y] #la i-ème lettre du mot en clair d'index x dans l'alphabet devient la i-ème lettre du mot crypté d'index y. 
     return result
-def decodeCezar(alphabet,mot,cle):
+def decodeCesar(alphabet,mot,cle):
     result=""
     for i in range(len(mot)): # 0 <= i <= len(mot)-1
         y=scan(mot[i],alphabet) # position de la i-ème lettre du mot dans l'alphabet ; copions la valeur de y à cette étape sous le nom x
@@ -29,7 +29,7 @@ def decodeCezar(alphabet,mot,cle):
         result+=alphabet[y] #la i-ème lettre du mot en clair d'index x dans l'alphabet devient la i-ème lettre du mot crypté d'index y. 
     return result
 
-def codeCezarAff(alphabet,mot,a,b):
+def codeCesarAff(alphabet,mot,a,b):
     result=""
     for i in range(len(mot)): # 0 <= i <= len(mot)-1
         y=scan(mot[i],alphabet) # position de la i-ème lettre du mot dans l'alphabet ; copions la valeur de y à cette étape sous le nom x
@@ -66,7 +66,7 @@ def inv(a,modulo):
     else: #si le pgcd!=1
         print("attention: le coefficient A de la fonction affine n'est pas premier avec la taille de l'alphabet !")
         exit()
-def decodeCezarAff(alphabet,mot,a,b):
+def decodeCesarAff(alphabet,mot,a,b):
     result=""
     for i in range(len(mot)): # 0 <= i <= len(mot)-1
         y=scan(mot[i],alphabet)  # position de la i-ème lettre du mot dans l'alphabet ; copions la valeur de y à cette étape sous le nom x
@@ -80,8 +80,8 @@ m=["Si deux hommes ont la même opinion. L'un d'eux est de trop","OUI"]
 while(1):
     print("=========CHOIX DE LA METHODE===========")
     print("1. Code Inverse")
-    print("2. Code Cézar")
-    print("3. Code Cézar Affine")
+    print("2. Code César")
+    print("3. Code César Affine")
     print("q. Quitter")
     choix=input("choix?:")
     if choix=="1":
@@ -94,28 +94,28 @@ while(1):
         m[i]=codeInverse(m[i])
         print("Mot décodé:",m[i])
     elif choix=="2":
-        print("=========CODE CEZAR===========")
+        print("=========CODE CESAR===========")
         print("a=",a,sep="")
         print("m=",m,sep="")
         y=int(input("Choix de l'alphabet:"))
         i=int(input("Choix du mot:"))
         c=int(input("Choix de la clé/décalage:"))
 
-        m[i]=codeCezar(a[y],m[i],c)
+        m[i]=codeCesar(a[y],m[i],c)
         print("Mot codé:",m[i])
-        m[i]=decodeCezar(a[y],m[i],c)
+        m[i]=decodeCesar(a[y],m[i],c)
         print("Mot décodé:",m[i])
     elif choix=="3":
-        print("=========CODE CEZAR AFFINE===========")
+        print("=========CODE CESAR AFFINE===========")
         print("a=",a,sep="")
         print("m=",m,sep="")
         y=int(input("Choix de l'alphabet:(0 ou 1)"))
         i=int(input("Choix du mot:(0 ou 1)"))
         ca=int(input("Choix du coefficient A:"))
         cb=int(input("Choix du coefficient B:"))
-        m[i]=codeCezarAff(a[y],m[i],ca,cb)
+        m[i]=codeCesarAff(a[y],m[i],ca,cb)
         print("Mot codé:",m[i])
-        m[i]=decodeCezarAff(a[y],m[i],ca,cb)
+        m[i]=decodeCesarAff(a[y],m[i],ca,cb)
         print("Mot décodé:",m[i])
     elif choix=="q":
         exit()
