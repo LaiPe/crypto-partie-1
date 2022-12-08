@@ -1,0 +1,224 @@
+\documentclass[10pt,a4paper,french]{article}
+\author{par Léo Peyronnet}
+\title{Code Inverse, César et César affine}
+\date{Décembre 2022}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{babel}
+\usepackage{listings}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tabto}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{tabto}
+\usepackage{xcolor}
+\usepackage{hhline}
+
+\definecolor{ao(english)}{rgb}{0.0, 0.5, 0.0}
+\lstset{
+  extendedchars=true,
+  framexleftmargin=16pt,
+  framextopmargin=3pt,
+  framexbottommargin=6pt,
+  frame=tb,
+  commentstyle=\color{ao(english)},
+  breaklines=true,
+  language=Python,
+  literate=
+  {²}{{\textsuperscript{2}}}1
+  {⁴}{{\textsuperscript{4}}}1
+  {⁶}{{\textsuperscript{6}}}1
+  {⁸}{{\textsuperscript{8}}}1
+  {€}{{\euro{}}}1
+  {é}{{\'e}}1
+  {è}{{\`{e}}}1
+  {ê}{{\^{e}}}1
+  {ë}{{\¨{e}}}1
+  {É}{{\'{E}}}1
+  {Ê}{{\^{E}}}1
+  {û}{{\^{u}}}1
+  {ù}{{\`{u}}}1
+  {â}{{\^{a}}}1
+  {à}{{\`{a}}}1
+  {á}{{\'{a}}}1
+  {ã}{{\~{a}}}1
+  {Á}{{\'{A}}}1
+  {Â}{{\^{A}}}1
+  {Ã}{{\~{A}}}1
+  {ç}{{\c{c}}}1
+  {Ç}{{\c{C}}}1
+  {õ}{{\~{o}}}1
+  {ó}{{\'{o}}}1
+  {ô}{{\^{o}}}1
+  {Õ}{{\~{O}}}1
+  {Ó}{{\'{O}}}1
+  {Ô}{{\^{O}}}1
+  {î}{{\^{i}}}1
+  {Î}{{\^{I}}}1
+  {í}{{\'{i}}}1
+  {Í}{{\~{Í}}}1,
+}
+
+\newenvironment{exemple}[1][]{\par\medskip
+   \noindent \textbf{Exemple:} \rmfamily}{\medskip}
+
+\begin{document}
+\maketitle
+\section{Rappel des méthodes}
+\subsection{Code Inverse}\label{codeinv}
+Cette méthode consiste à écrire le mot codé à l'envers. Pour ce faire, nous pouvons associer à chaque $x$ lettre du mot à crypter un entier $i \in [0,n[$ avec $n$ le nombre de lettres qui compose le mot. De fait, nous pouvons aussi associer à chaque $c$ lettre du mot crypté un entier $j \in [0,n[$.
+Ainsi, la relation entre les deux mots est:
+\begin{align*}
+x_i \equiv c_{n-i-1} \Leftrightarrow c_j \equiv x_{n-j-1}
+\end{align*}
+Ainsi, le même algorithme peut être utilisé pour crypter et décrypter un mot.
+\begin{exemple}
+\begin{center}
+\scriptsize
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+0 & 1 & 2 & $i$ & $n-3$ &$n-2$ & $n-1$ \\
+\hline
+C & R & Y & ... & A & G & E \\
+\hhline{|=|=|=|=|=|=|=|}
+$x_0=c_{n-1} $ & $x_1=c_{n-2} $ & $x_2=c_{n-3}$ & $x_i=c_{n-i-1}$ & $x_{n-3}=c_2$ & $x_{n-2}=c_1$ & $x_{n-1}=c_0$ \\
+\hhline{|=|=|=|=|=|=|=|}
+E & G & A & ... & Y & R & C \\
+\hline
+0 & 1 & 2 & $j$ & $n-3$ &$n-2$ & $n-1$ \\
+\hline
+\end{tabular}
+\normalsize
+\end{center}
+\end{exemple}
+\subsection{Code César}\label{cesar}
+Cette méthode consiste à décaler chaque lettre d'un mot par rapport à un alphabet. Pour ce faire, pour un mot $x$, déterminons $\alpha$ un alphabet incluant toutes les lettres de $x$ et $n$ la taille de $\alpha$. Soit $i \in [0,p[$ l'index d'une lettre de $x$ et $p$ la taille du mot, alors $x_i$ correspond à l'indice de cette lettre dans $\alpha$. Ainsi, pour $b \in \mathbb{Z}$ le décalage à appliquer dans le code, nous avons $y$ le mot codé tel que:
+\begin{align*}
+y_i \equiv x_i+b [n]
+\end{align*}
+Le décryptage avec $x$ le mot crypté et $y$ le mot décrypté correspond alors à:
+\begin{align*}
+y_i \equiv x_i-b [n]
+\end{align*}
+
+\subsection{Code César affine}\label{cesaraff}
+Cette méthode consiste à appliquer à chaque lettre d'un mot une autre valeur via une fonction affine. Soit $x$,$y$,$i$,$\alpha$ et $n$ comme vu à la méthode précédente. Soit $a$ et $b$ des entiers relatifs, alors:
+\begin{align*}
+y_i \equiv ax_i+b [n]
+\end{align*}
+Le décryptage avec $x$ le mot crypté et $y$ le mot décrypté correspond alors à:
+\begin{align*}
+y_i \equiv a'(x_i-b) [n]
+\end{align*}
+avec $a'$ l'inverse modulaire de $a$.
+
+\section{Présentation des programmes}
+\subsection{codeInverse()}
+Fonction relative à la méthode Code Inverse (cf. \ref{codeinv}).
+\begin{lstlisting}
+def codeInverse(mot):
+    result=""
+    for i in range(len(mot)-1,-1,-1): # len(mot)-1 >= i >= 0
+        # soit j un compteur incrémenté à chaque passage de boucle (sousentendu ici car boucle for)
+        result+=mot[i] # la i-ème lettre du mot en clair devient la j-ème lettre du mot crypté
+    return result
+\end{lstlisting}
+\subsection{scan()}
+Fonction retournant l'indice d'une lettre dans un alphabet. Utilisé pour la méthode César et César affine.
+\begin{lstlisting}
+def scan(lettre, alphabet):
+    y=0
+    while (lettre!=alphabet[y]): #si la i-ème lettre du mot est dans l'alphabet (à l'index y), alors fin de boucle
+            y+=1 #passage à la lettre suivante de l'alphabet
+            if y==len(alphabet): #si la i-ème lettre n'est pas dans l'alphabet
+                print("attention: un des caractères du mot n'est pas dans l'alphabet !")
+                exit()
+    return y
+\end{lstlisting}
+\subsection{codeCesar() et decodeCesar()}
+Fonction de codage et décodage relative à la méthode Code César (cf. \ref{cesar}).
+\begin{lstlisting}
+def codeCesar(alphabet,mot,cle):
+    result=""
+    for i in range(len(mot)): # 0 <= i <= len(mot)-1
+        y=scan(mot[i],alphabet) # position de la i-ème lettre du mot dans l'alphabet ; copions la valeur de y à cette étape sous le nom x
+        y=(y+cle)%len(alphabet) # décalage avec la clé cézar (y congru à x + cle modulo la taille de l'alphabet)
+        result+=alphabet[y] #la i-ème lettre du mot en clair d'index x dans l'alphabet devient la i-ème lettre du mot crypté d'index y. 
+    return result
+    
+def decodeCesar(alphabet,mot,cle):
+    result=""
+    for i in range(len(mot)): # 0 <= i <= len(mot)-1
+        y=scan(mot[i],alphabet) # position de la i-ème lettre du mot dans l'alphabet ; copions la valeur de y à cette étape sous le nom x
+        y=(y-cle)%len(alphabet) # décalage avec la clé cézar (y congru à x - cle modulo la taille de l'alphabet)
+        result+=alphabet[y] #la i-ème lettre du mot en clair d'index x dans l'alphabet devient la i-ème lettre du mot crypté d'index y. 
+    return result
+\end{lstlisting}
+\subsection{codeCesarAff()}
+Fonction de codage relative à la méthode Code César affine (cf. \ref{cesaraff}).
+\begin{lstlisting}
+def codeCesarAff(alphabet,mot,a,b):
+    result=""
+    for i in range(len(mot)): # 0 <= i <= len(mot)-1
+        y=scan(mot[i],alphabet) # position de la i-ème lettre du mot dans l'alphabet ; copions la valeur de y à cette étape sous le nom x
+        y=(a*y+b)%len(alphabet) # cryptage affine (y congru à a*x+b modulo la taille de l'alphabet)
+        result+=alphabet[y] #la i-ème lettre du mot en clair d'index x dans l'alphabet devient la i-ème lettre du mot crypté d'index y. 
+    return result
+\end{lstlisting}
+\subsection{euclideEtt() et inv()}
+Fonctions employées par decodeCesarAff() (cf. \ref{cesaraffc}):
+\begin{itemize}
+\item euclideEtt(): Algorithme d'Euclide étendu. Renvoie l'identité de Bézout ($a.u+b.v=pgcd(a,b)$) sous forme d'une liste de trois entiers. r1: pgcd; u1: u et v1: v.
+\item inv(): Revoie u si r1=1.
+\end{itemize}
+\begin{lstlisting}
+def euclideEtt(a,b):
+    r1=b
+    r2=a
+    u1=0
+    v1=1
+    u2=1
+    v2=0
+    while r2!=0:
+        q=r1//r2
+        
+        r3=r1
+        u3=u1
+        v3=v1
+
+        r1=r2
+        u1=u2
+        v1=v2
+
+        r2=r3-q*r2
+        u2=u3-q*u2
+        v2=v3-q*v2
+    return [r1,u1,v1] # retourne l'identité de bézout (r1:pgcd;u1:u et v1:v)
+
+def inv(a,modulo):
+    t=euclideEtt(a,modulo) #import de l'identité de bézout
+    if t[0]==1: #si le pgcd=1
+        return t[1] # retourne l'inverse modulaire de a :(u)
+    else: #si le pgcd!=1
+        print("attention: le coefficient A de la fonction affine n'est pas premier avec la taille de l'alphabet !")
+        exit()
+\end{lstlisting}
+\newpage
+\subsection{decodeCesarAff()}\label{cesaraffc}
+Fonction de décodage relative à la méthode Code César affine (cf. \ref{cesaraff}).
+\begin{lstlisting}
+def decodeCesarAff(alphabet,mot,a,b):
+    result=""
+    for i in range(len(mot)): # 0 <= i <= len(mot)-1
+        y=scan(mot[i],alphabet)  # position de la i-ème lettre du mot dans l'alphabet ; copions la valeur de y à cette étape sous le nom x
+        y=(inv(a,len(alphabet))*(y-b))%len(alphabet) # décryptage affine (y congru à a'*(x-b) modulo la taille de l'alphabet)
+        result+=alphabet[y] #la i-ème lettre du mot en clair d'index x dans l'alphabet devient la i-ème lettre du mot crypté d'index y.
+    return result
+\end{lstlisting}
+\end{document}

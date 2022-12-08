@@ -1,8 +1,8 @@
 def codeInverse(mot):
     result=""
     for i in range(len(mot)-1,-1,-1): # len(mot)-1 >= i >= 0
-        # soit n un compteur incrémenté à chaque passage de boucle (sousentendu ici car boucle for)
-        result+=mot[i] # la i-ème lettre du mot en clair devient la n-ème lettre du mot crypté
+        # soit j un compteur incrémenté à chaque passage de boucle (sousentendu ici car boucle for)
+        result+=mot[i] # la i-ème lettre du mot en clair devient la j-ème lettre du mot crypté
     return result
 
 def scan(lettre, alphabet):
@@ -16,12 +16,9 @@ def scan(lettre, alphabet):
 
 def codeCezar(alphabet,mot,cle):
     result=""
-    print("alpha=",len(alphabet))
     for i in range(len(mot)): # 0 <= i <= len(mot)-1
         y=scan(mot[i],alphabet) # position de la i-ème lettre du mot dans l'alphabet ; copions la valeur de y à cette étape sous le nom x
-        print(y,end=" ")
         y=(y+cle)%len(alphabet) # décalage avec la clé cézar (y congru à x + cle modulo la taille de l'alphabet)
-        print(y)
         result+=alphabet[y] #la i-ème lettre du mot en clair d'index x dans l'alphabet devient la i-ème lettre du mot crypté d'index y. 
     return result
 def decodeCezar(alphabet,mot,cle):
